@@ -1,36 +1,46 @@
-from sys import maxsize
+import fileinput
 from itertools import permutations
 
-nr_of_vertexes = 4
+#nr_of_vertexes = fileinput.input("moje_dane.txt")
 
 
-def findShortestPath(graph, s_n):
-    vertex = []
-    for v in range(nr_of_vertexes):
-        if v != s_n:
-            vertex.append(v)
+def costOfEdges(file_name):
+    file = open(file_name, "r")
+    lines = file.read().splitlines()
+    cost_of_edges = []
+    for i in range(1, len(lines)):
+        cost_of_edges.append(lines[i].split())
+    return cost_of_edges
 
-    min_path = maxsize
-    next_permutation = permutations(vertex)
 
-    for current_permutation in next_permutation:
-        current_cost = 0
+def nrOfVertexes(file_name):
+    file = open(file_name, "r")
+    return file.readline()
 
-        start_vertex = s_n
-        for end_vertex in current_permutation:
-            current_cost += graph[start_vertex][end_vertex]
-            start_vertex = end_vertex
-        current_cost += graph[start_vertex][s_n]
 
-        min_path = min(min_path, current_cost)
+def allRouts(start_node, nr_of_vertexes):
+    vertexes = []
+    for node in range(int(nr_of_vertexes)):
+        if node != start_node:
+            vertexes.append(node)
+    return permutations(vertexes)
 
-    return min_path
 
+def findShortestRout(data, number_of_cities):
+    min_rout = 2147483647
+    all_routs = allRouts(0, number_of_cities)
+    for route in all_routs:
+        cost = 0
+        i = 0
+        for vertex in route:
+            cost += int(data[i][vertex])
+            i = vertex
+
+        cost += int(data[i][0])
+        if cost < min_rout:
+            min_rout = cost
+    print(min_rout)
 
 
 if __name__ == "__main__":
-
-    edges = [[0, 10, 15, 20], [10, 0, 35, 25],
-             [15, 35, 0, 30], [20, 25, 30, 0]]
-    start_node = 0
-    print(findShortestPath(edges, start_node))
+    findShortestRout(costOfEdges("moje_dane.txt"), nrOfVertexes("moje_dane.txt"))
