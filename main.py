@@ -1,5 +1,6 @@
 from itertools import permutations
 from sys import maxsize
+from configparser import ConfigParser
 
 
 nr_of_vertexes = int(open("tsp_6_1.txt", "r").readline())
